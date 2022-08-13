@@ -13,7 +13,7 @@ class Users implements IUser {
 
     users = [] as Array<IUser>
 
-    findInusers(name: string): number {//通过session_id查找
+    findInusers(name: string): number {//通过name查找
         var index = -1;
         for (var j = 0, len = this.users.length; j < len; j++) {
             if (this.users[j].name === name)

@@ -53,12 +53,18 @@ io.on('connection', (socket) => {
 
     //获得客户端传来的name，添加新用户进用户列表UserAll,广播发送用户列表给客户端
     socket.on("getName", (name:string) => {
-        userName = name
-        UserAll.addUser(name, sessionId as string)
-        UserAll.setusersocket(name, socket)
-        let nameList=UserAll.getUsersName()
-        socket.broadcast.emit("getUsersName", nameList)
-        socket.emit('getUsersName',nameList)
+        if(UserAll.findInusers(name)===-1){
+            socket.emit('nameSuccess')
+            userName = name
+            UserAll.addUser(name, sessionId as string)
+            UserAll.setusersocket(name, socket)
+            let nameList=UserAll.getUsersName()
+            socket.broadcast.emit("getUsersName", nameList)
+            socket.emit('getUsersName',nameList)
+        }else{
+            socket.emit('nameError')
+        }
+        
     })
     //广播,将广播信息和广播发起者发给客户端
     socket.on('请求广播', (msg:string) => { socket.broadcast.emit('广播', msg,userName) })

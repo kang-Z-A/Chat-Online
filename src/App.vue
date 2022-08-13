@@ -9,7 +9,7 @@ let socket: Socket
 //构造响应式参数visiter
 const data = reactive({
   visiter: true,
-  // visiter: false,
+  success:false,
   userName:'',
   List: [] as string[],
   msgList:[] as string[],
@@ -17,8 +17,9 @@ const data = reactive({
 //socket建立连接，后续可以优化，在得到用户名后再请求连接服务器(有待考虑)
 onMounted(() => {
   socket = io('http://127.0.0.1:3000')
-  // socket=io('/server')
   socket.on('connection', (msg: string) => { console.log(socket.id, msg) })
+  socket.on('nameSuccess',() => { data.success=true })
+  socket.on('nameError',() => { window.alert('该昵称已被注册') })
   socket.on("getUsersName", (list: string[]) => { data.List = [...list] })
   socket.on('广播', (msg: string,name:string) => { data.msgList.push('[ '+name+' ] : '+msg) 
     })
@@ -44,6 +45,7 @@ const getMsg = (msg: string, val: string) => {
   }
 }
 
+//将后端传来的初始选项列表加工，删掉自己的选项返回最终的选项列表
 const selectList=computed(():string[] => { 
   let i:number,index:number=-1
   for(i=0;i<data.List.length;i++){
@@ -63,7 +65,7 @@ const selectList=computed(():string[] => {
 </script>
 
 <template>
-  <Login v-if=data.visiter @getUser="getUser" @change-visiter="changeVisiter"></Login>
+  <Login v-if=data.visiter @getUser="getUser" @change-visiter="changeVisiter" :loginSuc="data.success"></Login>
   <Chat :selected="data.visiter" :nameList="selectList" @post-msg="getMsg" :msg-list="data.msgList"></Chat>
 </template>
 
