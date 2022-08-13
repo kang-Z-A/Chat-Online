@@ -1,0 +1,69 @@
+@import '../../assets/css/varibles.styl';
+// @import '~@css/varibles.styl';   vite暂不支持
+* 
+    margin: 0;
+    padding: 0;
+    list-style: none;
+/* .box
+    width: 99%
+    height: 97%
+    position: absolute
+    background: url(src/assets/img/wallhaven-vmoj95.jpg)
+    background-size: cover
+    background-repeat: no-repeat */
+.body 
+    height: 100%;
+    margin: 20px;
+    position: relative;
+    & #messages 
+        height: 80vh
+        overflow: auto
+        &::-webkit-scrollbar { display: none; /* Chrome Safari */ }
+        padding: 10px 10px;
+        background: rgba(220,220,220,0.8)
+        border-radius: 5px
+        box-shadow: 5px 5px 5px rgba(151, 146, 146, 0.8)
+        & li 
+            padding: 2px;
+            & .bubble 
+                width: max-content;
+                padding: 5px;
+                margin: 5px;
+                border: 3px solid $theme_color
+                border-radius: 10px;
+                box-shadow: 5px 5px 5px rgba(80, 98, 27, 0.2);
+    & .contain 
+        position: absolute;
+        top: 88vh;
+        & .m-2 
+            width: 100px;
+            :deep() .el-input__wrapper
+                background: rgba(163, 202, 46, 0.2)
+                box-shadow:0 0 0 1px rgba(27, 88, 17, 0.8) !important
+            :deep() .el-select-dropdown__item
+                text-align: center
+            :deep() .el-select-dropdown__item.selected
+                color: rgba(191, 255, 0, 0.849)
+                
+        & input
+            margin-left: 10px
+            font-size: 14px
+            height: 32px
+            width: 70vw
+            border:1px solid rgba(163, 202, 46, 0.8)
+            border-radius: 5px
+            transition: 0.2s
+            padding: 0 10px
+            outline: none
+            &:focus
+                border: 1.5px solid rgba(29, 200, 206, 0.8)
+        & button
+            margin-left: 20px
+            width: 80px
+            height: 32px
+            border:1px solid rgba(163, 202, 46, 0.8)
+            border-radius: 5px
+            transition: 0.2s
+            background: rgba(163, 202, 46, 0.2)
+            &:hover
+                background: rgba(10, 116, 209, 0.8)
