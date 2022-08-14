@@ -53,7 +53,9 @@ io.on('connection', (socket) => {
 
     //获得客户端传来的name，添加新用户进用户列表UserAll,广播发送用户列表给客户端
     socket.on("getName", (name:string) => {
-        if(UserAll.findInusers(name)===-1){
+        if(name==='')
+            socket.emit('nameEmpty')
+        else if(UserAll.findInusers(name)===-1){
             socket.emit('nameSuccess')
             userName = name
             UserAll.addUser(name, sessionId as string)

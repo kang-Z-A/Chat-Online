@@ -5,6 +5,9 @@ import { onMounted } from 'vue';
 import { io, Socket } from 'socket.io-client';
 import { computed,reactive, toRef, toRefs } from '@vue/reactivity';
 
+import { ElMessage, ElMessageBox } from 'element-plus'
+import type { Action } from 'element-plus'
+
 let socket: Socket
 //构造响应式参数visiter
 const data = reactive({
@@ -18,8 +21,9 @@ const data = reactive({
 onMounted(() => {
   socket = io('http://127.0.0.1:3000')
   socket.on('connection', (msg: string) => { console.log(socket.id, msg) })
+  socket.on('nameEmpty',() => { nameEmpty() })
   socket.on('nameSuccess',() => { data.success=true })
-  socket.on('nameError',() => { window.alert('该昵称已被注册') })
+  socket.on('nameError',() => { nameRepeat() })
   socket.on("getUsersName", (list: string[]) => { data.List = [...list] })
   socket.on('广播', (msg: string,name:string) => { data.msgList.push('[ '+name+' ] : '+msg) 
     })
@@ -61,6 +65,34 @@ const selectList=computed(():string[] => {
   }
   return data.List
  })
+
+ const nameRepeat=() => {
+  ElMessageBox.alert('该姓名已存在', '操作失败', {
+    // if you want to disable its autofocus
+    // autofocus: false,
+    confirmButtonText: '确认',
+    // callback: (action: Action) => {
+    //   ElMessage({
+    //     type: 'info',
+    //     message: `请重新输入昵称`,
+    //   })
+    // },
+  })
+}
+
+const nameEmpty=() => {
+  ElMessageBox.alert('昵称不能为空', '错误', {
+    // if you want to disable its autofocus
+    // autofocus: false,
+    confirmButtonText: '确认',
+    // callback: (action: Action) => {
+    //   ElMessage({
+    //     type: 'info',
+    //     message: `请重新输入昵称`,
+    //   })
+    // },
+  })
+}
 
 </script>
 
