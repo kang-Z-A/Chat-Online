@@ -27,16 +27,14 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     }),
   ],
-  // server:{
-  //   proxy:{
-  //     '/server': {
-  //       target: {
-  //       host:'http://127.0.0.1',
-  //       port:3000,
-  //       },
-  //       changeOrigin: true,
-  //       rewrite: (path) => path.replace(/^\/server/, '')
-  //     },
-  //   },
-  // },
+  server:{
+    proxy:{
+      '/server': 'http://127.0.0.1:3000',
+      // '/server': {
+      //   target: 'http://127.0.0.1:3000',
+      //   changeOrigin: true,
+      //   rewrite: (path) => path.replace(/^\/srever/, '')
+      // },
+    },
+  },
 })

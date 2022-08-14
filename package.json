@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "server":"node --loader ts-node/esm ./server/server.ts",
+    "server": "node --loader ts-node/esm ./server/server.ts",
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "element-plus": "^2.2.12",
     "koa": "^2.13.4",
     "koa-body": "^5.0.0",

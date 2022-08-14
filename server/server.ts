@@ -1,4 +1,5 @@
 import koa from 'koa'
+import koaBody from 'koa-body'
 import http from 'http'
 import { Server } from 'socket.io'
 import session from 'koa-session'
@@ -11,7 +12,10 @@ const UserAll = new Users()
 
 const app = new koa()
 const server = http.createServer(app.callback()).listen(3000, () => { console.log("listening on port:3000") })
+let sessionId:string|null   
 
+app.keys = ['mySecret']
+app.use(session(app))
 
 /* const router=new Router()
 const __dirname=path.resolve()
@@ -22,16 +26,17 @@ router.get('/',(ctx, next) => {
 app.use(router.routes()); */
 
 const main = (async (ctx:koa.Context) => {
-    ctx.response.status = 200
-    let uri = ctx.request.href
-    console.log(uri)
+    // ctx.set("Access-Control-Allow-Origin", '*');
+    ctx.response.status=200
+    console.log(ctx.request.body.name)
+    // console.log(JSON.stringify(ctx.request.body))
+    ctx.session!.name=ctx.request.body.name
+    console.log(ctx.session)
 })
 
-// app.use(koaBody())
+app.use(koaBody())
 app.use(main)
 
-app.keys = ['mySecret']
-app.use(session(app))
 
 const io = new Server(server, {
     cors: {
@@ -46,10 +51,11 @@ function getSessionId(cookieString: string, cookieName: string): string | null {
 }
 
 io.on('connection', (socket) => {
-    let sessionId = getSessionId(socket.request.headers.cookie as string, 'koa.sess')
+    sessionId = getSessionId(socket.request.headers.cookie as string, 'kao.sess')
+    console.log(sessionId)
+    
     let userName: string
     console.log('客户端已连接')
-    socket.emit('connection', "welcome,my friend!")
 
     //获得客户端传来的name，添加新用户进用户列表UserAll,广播发送用户列表给客户端
     socket.on("getName", (name:string) => {
