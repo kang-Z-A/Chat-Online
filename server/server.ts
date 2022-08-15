@@ -12,7 +12,8 @@ const UserAll = new Users()
 
 const app = new koa()
 const server = http.createServer(app.callback()).listen(3000, () => { console.log("listening on port:3000") })
-let sessionId:string|null   
+let sessionId:string|null
+let userName:string
 
 app.keys = ['mySecret']
 app.use(session(app))
@@ -26,12 +27,26 @@ router.get('/',(ctx, next) => {
 app.use(router.routes()); */
 
 const main = (async (ctx:koa.Context) => {
-    // ctx.set("Access-Control-Allow-Origin", '*');
+    //通过不同的状态码告知客户端昵称是否合理
+    if(ctx.request.url==='/login' && ctx.request.method==='POST'){
+        let name:string=ctx.request.body.name
+        console.log(name)
+        if(name===''){
+            ctx.response.status=204
+        }else if(UserAll.findInusers(name)===-1){
+            ctx.response.status=200
+            userName=name
+            ctx.session!.name=ctx.request.body.name
+        }else   ctx.response.status=416
+        
+    }
+
+    /* // ctx.set("Access-Control-Allow-Origin", '*');
     ctx.response.status=200
     console.log(ctx.request.body.name)
     // console.log(JSON.stringify(ctx.request.body))
     ctx.session!.name=ctx.request.body.name
-    console.log(ctx.session)
+    console.log(ctx.session) */
 })
 
 app.use(koaBody())

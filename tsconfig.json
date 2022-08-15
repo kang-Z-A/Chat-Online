@@ -15,10 +15,10 @@
     "types": ["element-plus/global"],
     "baseUrl":"./",
     "paths":{
-      "@/*":["./src/*"],
-      "@css/*":["./src/assets/css/*"],
+      "@/*":["src/*"],
+      "@css/*":["src/assets/css/*"],
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
 }

@@ -13,10 +13,11 @@ import {resolve} from 'path'
 export default defineConfig({
   base:'./',
   resolve: {
+    extensions: ['.ts','.js', '.jsx', '.tsx'],
     alias: {
       '@': resolve(__dirname, 'src') ,
       '@css':resolve(__dirname, 'src/assets/css') 
-    }
+    },
   },
   plugins: [
     vue(),
@@ -29,12 +30,12 @@ export default defineConfig({
   ],
   server:{
     proxy:{
-      '/server': 'http://127.0.0.1:3000',
-      // '/server': {
-      //   target: 'http://127.0.0.1:3000',
-      //   changeOrigin: true,
-      //   rewrite: (path) => path.replace(/^\/srever/, '')
-      // },
+      // '/server': 'http://127.0.0.1:3000',
+      '/server': {
+        target: 'http://127.0.0.1:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/server/, '')
+      },
     },
   },
 })

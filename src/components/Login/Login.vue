@@ -1,24 +1,15 @@
 <script setup lang='ts'>
 import { reactive,ref,toRefs, watch } from 'vue';
-const name=ref('')
-const props=defineProps({
-    loginSuc:Boolean
-})
-const {loginSuc}=toRefs(props)
+import {login} from "@/api/api"
 
-const emit=defineEmits<{
-    (e:'getUser',value:string):void
-    (e:'changeVisiter',value:boolean):void
-}>()
+const name=ref('')
 
 const Login = () => {
-    emit('getUser',name.value)
+    login(name.value).then((response) => { 
+        console.log(response)
+     })
     name.value = ''
 }
-watch(loginSuc,(val) => {
-    if(val)
-        emit('changeVisiter',false)
-})
 
 </script>
 
