@@ -7,4 +7,5 @@
 
 ---
 master分支是基于socketId区分的聊天用户
+
 hotfix分支则是基于sessionId区分的聊天用户
