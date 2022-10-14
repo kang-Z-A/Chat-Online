@@ -79,5 +79,10 @@ io.on('connection', (socket) => {
         }
     })
     //客户端离线后删除列表用户
-    socket.on('disconnect',() => { UserAll.delUser(userName) })
+    socket.on('disconnect',() => { 
+        UserAll.delUser(userName) 
+        let nameList=UserAll.getUsersName()
+        socket.broadcast.emit("getUsersName", nameList)
+        socket.emit('getUsersName',nameList)
+    })
 })
