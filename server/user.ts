@@ -1,22 +1,15 @@
 // import type {User} from './class'
 import type { IUser } from './interface.js'
 
-class Users implements IUser {
-    name: string
-    session_id: string
-    socket: object | null
-    constructor() {
-        this.name = ''
-        this.session_id = ''
-        this.socket = null
-    }
+class Users{
+    constructor() {}
 
     users = [] as Array<IUser>
 
-    findInusers(session_id: string): number {//通过name查找
+    findInusers(session_id: string): number {
         var index = -1;
         for (var j = 0, len = this.users.length; j < len; j++) {
-            if (this.users[j].session_id === session_id)
+            if (this.users[j].session_id == session_id)
                 index = j;
         }
         return index;
@@ -50,6 +43,11 @@ class Users implements IUser {
                 results.push({ session_id: this.users[j].session_id, name: this.users[j].name, socket: null });
         }
         return results;
+    }
+    getUsers(): IUser[] {
+        let userList: IUser[] = []
+        this.users.forEach((item) => { userList.push({session_id: item.session_id, name: item.name, socket: null}) })
+        return userList
     }
     delUser(session_id: string):void {
         let index = this.findInusers(session_id)

@@ -3,7 +3,8 @@ import axios from 'axios'
 // create an axios instance
 const request = axios.create({
   baseURL: '/server', 
-  timeout: 5000 
+  timeout: 5000 ,
+  withCredentials: true,
 })
 
 // request interceptor

@@ -1,29 +1,25 @@
 <script setup lang='ts'>
 import {  onBeforeMount, ref } from 'vue';
-import { login,ask } from "@/api/api"
+import { login } from "@/api/api"
 import { useRouter } from 'vue-router';
+
 
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const name = ref('')
 const router = useRouter()
 
-onBeforeMount(() => { 
-    ask().then((res) => { if(res.status===226) router.push({name:'chat'})})
-})
 
 const Login = () => {
     login(name.value).then((response) => {
         // console.log(response)
         if (response.status === 200) {
-            console.log(router)
             router.push({
                 name: "chat",
             })
         }
         else if (response.status === 204) nameEmpty()
         else if (response.status === 416) nameRepeat()
-        else if (response.status === 226) router.push({ name: 'chat' })
     })
     name.value = ''
 }

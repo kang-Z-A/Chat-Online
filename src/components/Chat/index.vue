@@ -3,8 +3,7 @@ import { ref, nextTick, onMounted, onUpdated, reactive, toRefs, inject, onBefore
 
 import { io, Socket } from 'socket.io-client';
 import { useRouter } from 'vue-router';
-
-import { chat, disconnect } from "@/api/api"
+import { chat } from "@/api/api"
 
 interface IUser {
     name: string
@@ -17,44 +16,28 @@ const value = ref('所有人')       //选择的聊天对象
 const messages = ref<HTMLUListElement>()
 
 let socket: Socket
-let sessionId: string
 
-//挂载前确认是否已经有sessionId了，没有则转向login页面
-onBeforeMount(() => {
-    chat().then((res) => {
-        if (res.status === 226) {
-            router.push({ name: 'login' })
-        } else if (res.status === 200) {
-            sessionId = res.headers.sessionid
-            // console.log(sessionId)
-        }
-    })
-})
+const getSessionId = (cookieString:string, cookieName:string) => {
+    var matches = new RegExp(cookieName + '=([^;]+);', 'gmi').exec(cookieString);
+    if(matches)
+    return matches[1] ? matches[1] : null;
+}
+
+let mysession = getSessionId(document.cookie,'koa:sess')
+
 //与服务端建立socket连接
 onMounted(() => {
+    chat()
+    let cookies: string = document.cookie
     //等待sessionId更新
-    setTimeout(() => {
-        socket = io('http://127.0.0.1:3000', {
-            query: {
-                session_id: sessionId
-            }
+    socket = io('http://127.0.0.1:3000',{query:{cookies}})
+    socket.on('getUserList', (list) => {
+        data.userList = [...list].filter(item => {
+            return item.session_id != mysession;
         })
-        socket.on('getUserList', (list) => {
-            data.userList = [...list]
-        })
-        socket.on('广播', (msg, username) => { data.msgList.push('[ ' + username + ' ] : ' + msg) })
-        socket.on('私聊', (msg, username) => { data.msgList.push('[ 私聊 ( ' + username + ' ) ] : ' + msg) })
-    }, 500)
-    // socket = io('http://127.0.0.1:3000',{
-    //     query:{
-    //         session_id:sessionId
-    //     }
-    // })
-    // socket.on('getUserList',(list) => { 
-    //     data.userList=[...list]
-    // })
-    // socket.on('广播',(msg,username) => { data.msgList.push('[ ' + username + ' ] : ' + msg) })
-    // socket.on('私聊',(msg,username) => { data.msgList.push('[ 私聊 ( ' + username + ' ) ] : ' + msg) })
+    })
+    socket.on('广播', (msg, username) => { data.msgList.push('[ ' + username + ' ] : ' + msg) })
+    socket.on('私聊', (msg, username) => { data.msgList.push('[ 私聊 ( ' + username + ' ) ] : ' + msg) })
 })
 
 const data = reactive({
@@ -71,10 +54,6 @@ onUpdated(() => {
         if (messages.value)
             messages.value.scrollTop = messages.value?.scrollHeight - messages.value?.offsetHeight
     })
-})
-
-onBeforeUnmount(() => {
-    disconnect()
 })
 
 const postMsg = () => {
